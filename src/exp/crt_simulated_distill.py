@@ -1,6 +1,6 @@
 from distillation import distill_Y, distill_Z
 import numpy as np
-from utils import sample_X_tilde_theoretical, generate_simulated_data2D, mse_loss, loss_chooser, prediction_chooser, get_base_model
+from utils import sample_X_tilde_theoretical, generate_simulated_dataHD, mse_loss, loss_chooser, prediction_chooser, get_base_model
 from crt import T_cv, T_HRT, T_jk, T_OLS, T_trainScore, CRT_comparison
 import pandas as pd
 import argparse
@@ -11,9 +11,10 @@ from pathlib import Path
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="CRT 2D")
+    parser = argparse.ArgumentParser(description="CRT HD")
     parser.add_argument("--setting", type=str, default="gaussian_linear", help="Path to real dataset CSV")
     parser.add_argument("--model", type=str,  default="lasso",help="model")
+    parser.add_argument("--dimension", type=int,  default=100,help="dimension")
     parser.add_argument("--seed", type=int, default=0)
     return parser.parse_args()
   
@@ -21,12 +22,14 @@ def parse_args():
 def main(args):
     s = args.seed
     setting = args.setting
+    d = args.dimension
     model_class = get_base_model(args.model, s)
     loss_fn = loss_chooser(setting)
     predict_fn = prediction_chooser(loss_fn)
     n_samples = [30, 50, 70, 100]
     B = 500
     n_jobs = 10
+
 
     rng = np.random.default_rng(s)
 
@@ -44,7 +47,7 @@ def main(args):
     for n in n_samples:
         # --- Generate data ---
         print(f'number of samples:{n}')
-        X, Y, Z = generate_simulated_data2D(setting=setting, n=n, seed=s)
+        X, Y, Z = generate_simulated_dataHD(setting=setting, n=n, d=d, seed=s)
 
         # --- Sample X_tilde ---
         X_tilde = sample_X_tilde_theoretical(Z, B, rng)

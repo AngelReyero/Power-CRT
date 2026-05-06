@@ -179,7 +179,7 @@ def nonlinear_product(n, p, seed):
 
     return X, Y,  Z
 
-def generate(setting, n, p, seed):
+def generate_simulated_dataHD(setting, n, p, seed):
     settings = {
         "gaussian_linear": gaussian_linear_multi,
         "nonlinear_cos": nonlinear_cos_multi,

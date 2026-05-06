@@ -48,6 +48,7 @@ def CRT_comparison(
     n_jobs=5,
     model_HRT=RandomForestRegressor(),
     train_test_HRT=0.8,
+    seed=0,
 ):
     # Distillation
     if distill_Y is not None:
